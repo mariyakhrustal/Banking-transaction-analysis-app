@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "banking-transaction-analysis-app"
+version = "0.1.0"
+description = ""
+authors = ["Mariya Khrustaleva <mbotmanova@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
