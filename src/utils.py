@@ -29,9 +29,24 @@ def filter_transacts_by_card_number(df_transacts: pd.DataFrame) -> list[dict]:
     общую сумму расходов;
     кешбэк (1 рубль на каждые 100 рублей).
     """
-    pass
+    carts_dict = (
+        df_transacts.loc[(df_transacts["Сумма платежа"] < 0)]
+        .groupby(by="Номер карты")
+        .agg("Сумма платежа")
+        .sum()
+        .to_dict()
+    )
+    cart_info = []
+    for cart_num, sum_of_spent in carts_dict.items():
+        total_spent = abs(sum_of_spent)
+        cart_info.append(
+            {"last_digits": {cart_num[-4:]},
+             "total_spent": {total_spent},
+             "cashback": {round(total_spent / 100, 2)}}
+        )
+    return cart_info
 
 
-if __name__ == '__main__':
-    df = read_file_xlsx("../data/operations.xlsx")
-    print(df.iloc[0])
+# if __name__ == '__main__':
+    # df = read_file_xlsx("../data/operations.xlsx")
+    # print(filter_transacts_by_card_number(df))
