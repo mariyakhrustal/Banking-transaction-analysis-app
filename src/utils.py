@@ -1,6 +1,14 @@
+import os
 from datetime import datetime
+from typing import Any
 
 import pandas as pd
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+api_key = os.getenv("API_KEY")
 
 
 def read_greeting() -> str:
@@ -40,13 +48,36 @@ def filter_transacts_by_card_number(df_transacts: pd.DataFrame) -> list[dict]:
     for cart_num, sum_of_spent in carts_dict.items():
         total_spent = abs(sum_of_spent)
         cart_info.append(
-            {"last_digits": {cart_num[-4:]},
-             "total_spent": {total_spent},
-             "cashback": {round(total_spent / 100, 2)}}
+            {"last_digits": {cart_num[-4:]}, "total_spent": {total_spent}, "cashback": {round(total_spent / 100, 2)}}
         )
     return cart_info
 
 
+def get_conversion(currencies: list) -> Any:
+    """Функция конвертирует валюту и возвращает сумму транзакции в рублях."""
+    try:
+        currency_rates = []
+        for currency in currencies:
+            url = "https://api.apilayer.com/exchangerates_data/convert"
+            headers = {"apikey": api_key}
+            params = {"from": currency, "to": "RUB", "amount": 1}
+            response = requests.get(url, headers=headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                if "result" in data:
+                    result = {"currency": currency, "rate": round(float(data["result"]), 2)}
+                    currency_rates.append(result)
+            else:
+                print(f"Ошибка API: {response.status_code}")
+                return []
+        if currency_rates:
+            return currency_rates
+    except Exception as e:
+        print(f"Ошибка при конвертации: {e}")
+        return []
+
+
 # if __name__ == '__main__':
-    # df = read_file_xlsx("../data/operations.xlsx")
-    # print(filter_transacts_by_card_number(df))
+# df = read_file_xlsx("../data/operations.xlsx")
+# print(filter_transacts_by_card_number(df))
+# print(get_conversion(["USD", "EUR"]))
