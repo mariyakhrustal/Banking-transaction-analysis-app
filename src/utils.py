@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key = os.getenv("API_KEY")
+currency_api_key = os.getenv("CURRENCY_API_KEY")
+stocks_api_key = os.getenv("STOCKS_API_KEY")
 
 
 def read_greeting() -> str:
@@ -59,14 +60,13 @@ def get_conversion(currencies: list) -> Any:
         currency_rates = []
         for currency in currencies:
             url = "https://api.apilayer.com/exchangerates_data/convert"
-            headers = {"apikey": api_key}
+            headers = {"apikey": currency_api_key}
             params = {"from": currency, "to": "RUB", "amount": 1}
-            response = requests.get(url, headers=headers, params=params)
+            response = requests.get(url, headers=headers, params=params, timeout=5)
             if response.status_code == 200:
                 data = response.json()
-                if "result" in data:
-                    result = {"currency": currency, "rate": round(float(data["result"]), 2)}
-                    currency_rates.append(result)
+                result = {"currency": currency, "rate": round(float(data["result"]), 2)}
+                currency_rates.append(result)
             else:
                 print(f"Ошибка API: {response.status_code}")
                 return []
@@ -77,7 +77,29 @@ def get_conversion(currencies: list) -> Any:
         return []
 
 
+def get_stocks_prices(stocks: list) -> Any:
+    """Функция, получающая цены на акции"""
+    stock_prices = []
+    try:
+        for stock in stocks:
+            url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock}&apikey={currency_api_key}"
+            response = requests.get(url, timeout=5, allow_redirects=False)
+            if response.status_code == 200:
+                data = response.json()
+                result = {"stock": stock, "price": round(float(data["Global Quote"]["05. price"]), 2)}
+                stock_prices.append(result)
+            else:
+                print(f"Ошибка API: {response.status_code}")
+                return []
+        if stock_prices:
+            return stock_prices
+    except Exception as e:
+        print(f"Ошибка при конвертации: {e}")
+        return []
+
+
 # if __name__ == '__main__':
+#     print(get_stock_prices(["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]))
 # df = read_file_xlsx("../data/operations.xlsx")
 # print(filter_transacts_by_card_number(df))
 # print(get_conversion(["USD", "EUR"]))
