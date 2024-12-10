@@ -52,7 +52,7 @@ def test_get_conversion_api_error(mock_get: MagicMock) -> None:
     params = {"from": "USD", "to": "RUB", "amount": 1}
     mock_get.return_value.status_code = 500
     assert get_conversion(currencies) == []
-    mock_get.assert_called_once_with(currency_url, headers=headers, params=params, timeout=5)
+    mock_get.assert_called_once_with(currency_url, headers=headers, params=params, timeout=30)
 
 
 @patch("requests.get")
@@ -62,7 +62,7 @@ def test_get_conversion_exception(mock_get: MagicMock) -> None:
     params = {"from": "USD", "to": "RUB", "amount": 1}
     mock_get.side_effect = Exception("test exception")
     assert get_conversion(currencies) == []
-    mock_get.assert_called_once_with(currency_url, headers=headers, params=params, timeout=5)
+    mock_get.assert_called_once_with(currency_url, headers=headers, params=params, timeout=30)
 
 
 @patch("requests.get")
@@ -73,7 +73,7 @@ def test_get_conversion_successful(mock_get: MagicMock) -> None:
     mock_get.return_value.status_code = 200
     mock_get.return_value.json.return_value = {"result": 60.0}
     assert get_conversion(currencies) == [{"currency": "USD", "rate": 60.0}]
-    mock_get.assert_called_once_with(currency_url, headers=headers, params=params, timeout=5)
+    mock_get.assert_called_once_with(currency_url, headers=headers, params=params, timeout=30)
 
 
 @patch("requests.get")
@@ -111,3 +111,11 @@ def test_filter_transacts_by_card_number() -> None:
     ]
     result = filter_transacts_by_card_number(df)
     assert result == expected
+
+
+def test_filter_transacts_by_card_number_error() -> None:
+    """Проверка на ошибку фильтрации и расчетов"""
+    data = {"Сумма платежа": [-500, -200]}
+    df = pd.DataFrame(data)
+    result = filter_transacts_by_card_number(df)
+    assert result == []
