@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from datetime import datetime
@@ -172,3 +173,9 @@ def get_top_transacts(filtered_df: pd.DataFrame) -> list[dict]:
         print(f"Ошибка: {e}")
         logger.error(f"Ошибка: {e}")
         return []
+
+
+def create_json_response(python_str: Any) -> str:  # pragma: no cover
+    """Функция для формирования строки json"""
+    json_data = json.dumps(python_str, indent=4, ensure_ascii=False)
+    return json_data

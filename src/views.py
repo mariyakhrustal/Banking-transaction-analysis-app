@@ -2,8 +2,16 @@ import json
 import logging
 import os
 
-from src.utils import (filter_by_date_transacts, filter_transacts_by_card_number, get_conversion, get_stocks_prices,
-                       get_top_transacts, read_file_xlsx, read_greeting)
+from src.utils import (
+    filter_by_date_transacts,
+    filter_transacts_by_card_number,
+    get_conversion,
+    get_stocks_prices,
+    get_top_transacts,
+    read_file_xlsx,
+    read_greeting,
+    create_json_response,
+)
 
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs")
 if not os.path.exists(logs_dir):
@@ -45,7 +53,7 @@ def get_home_page_json_response(date_str: str) -> str | list:
             "stock_prices": stocks_func,
         }
         logger.info("Формирование json строки")
-        json_data = json.dumps(final_json_str, indent=4, ensure_ascii=False)
+        json_data = create_json_response(final_json_str)
         logger.info("Функция страницы главная успешно завершила свою работу")
         return json_data
     except FileNotFoundError as e:
