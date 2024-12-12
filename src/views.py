@@ -2,16 +2,8 @@ import json
 import logging
 import os
 
-from src.utils import (
-    filter_by_date_transacts,
-    filter_transacts_by_card_number,
-    get_conversion,
-    get_stocks_prices,
-    get_top_transacts,
-    read_file_xlsx,
-    read_greeting,
-    create_json_response,
-)
+from src.utils import (create_json_response, filter_by_date_transacts, filter_transacts_by_card_number, get_conversion,
+                       get_stocks_prices, get_top_transacts, read_file_xlsx, read_greeting)
 
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs")
 if not os.path.exists(logs_dir):

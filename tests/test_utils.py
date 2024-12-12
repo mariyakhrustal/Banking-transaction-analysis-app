@@ -4,8 +4,10 @@ from unittest.mock import MagicMock, patch
 import pandas as pd
 import pytest
 from dotenv import load_dotenv
+from pandas._libs.tslibs.timestamps import Timestamp
 
-from src.utils import filter_transacts_by_card_number, get_conversion, get_stocks_prices, read_file_xlsx, read_greeting
+from src.utils import (filter_by_date_transacts, filter_transacts_by_card_number, get_conversion, get_stocks_prices,
+                       get_top_transacts, read_file_xlsx, read_greeting)
 
 load_dotenv()
 
@@ -119,3 +121,47 @@ def test_filter_transacts_by_card_number_error() -> None:
     df = pd.DataFrame(data)
     result = filter_transacts_by_card_number(df)
     assert result == []
+
+
+def test_filter_by_date_transacts(sample_data: dict) -> None:
+    end_date = "02.03.2019 12:00:00"
+    test_df = pd.DataFrame(sample_data)
+    result = filter_by_date_transacts(test_df, end_date)
+    assert result.loc[0, "Сумма"] == 100
+    assert result.loc[0, "Дата операции"] == Timestamp("2019-03-01 12:00:00")
+
+
+def test_filter_by_date_transacts_error(sample_data: dict) -> None:
+    end_date = "02.03.2019"
+    test_df = pd.DataFrame(sample_data)
+    result = filter_by_date_transacts(test_df, end_date)
+    assert result == []
+
+
+def test_get_top_transacts(sample_transact: pd.DataFrame) -> None:
+    expected_result = [
+        {"date": "04.01.2024", "amount": 3000, "category": "Путешествия", "description": "Отпуск"},
+        {"date": "05.01.2024", "amount": 2500, "category": "Кафе", "description": "Обед"},
+        {"date": "02.01.2024", "amount": 2000, "category": "Транспорт", "description": "Билет на автобус"},
+        {"date": "03.01.2024", "amount": 1500, "category": "Развлечения", "description": "Кино"},
+        {"date": "01.01.2024", "amount": 1000, "category": "Продукты", "description": "Покупка в магазине"},
+    ]
+    result = get_top_transacts(sample_transact)
+    assert result == expected_result
+
+
+def test_get_top_transacts_error(sample_data: dict) -> None:
+    test_df = pd.DataFrame(sample_data)
+    result = get_top_transacts(test_df)
+    assert result == []
+
+
+def test_get_top_transacts_less(sample_transact: pd.DataFrame) -> None:
+    reduced_transactions = sample_transact.head(3)
+    result = get_top_transacts(reduced_transactions)
+    expected_result = [
+        {"date": "02.01.2024", "amount": 2000, "category": "Транспорт", "description": "Билет на автобус"},
+        {"date": "03.01.2024", "amount": 1500, "category": "Развлечения", "description": "Кино"},
+        {"date": "01.01.2024", "amount": 1000, "category": "Продукты", "description": "Покупка в магазине"},
+    ]
+    assert result == expected_result
