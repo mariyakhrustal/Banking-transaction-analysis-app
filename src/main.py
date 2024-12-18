@@ -5,7 +5,6 @@ from src.reports import spending_by_category
 from src.services import investment_bank, read_file_xlsx
 from src.views import get_home_page_json_response
 
-
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs")
 if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)  # pragma: no cover
