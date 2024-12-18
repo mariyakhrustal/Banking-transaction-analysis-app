@@ -39,6 +39,7 @@ def test_multiply_with_filename(tmp_path):
     @report(filename=str(report_file))
     def add_func(x: Any, y: Any) -> Any:
         return x + y
+
     add_func(6, 3)
     assert report_file.exists()
     with open(report_file, "r", encoding="utf-8") as file:
@@ -53,7 +54,7 @@ def test_report_with_no_filename():
 
         assert result == 42
 
-        mock_file.assert_called_once_with('../reports\\report.txt', 'a', encoding='utf-8')
+        mock_file.assert_called_once_with("../reports\\report.txt", "a", encoding="utf-8")
         mock_file().write.assert_called_once_with("Результат функции multiply: 42\n")
 
 
@@ -73,7 +74,7 @@ def test_default_report_file():
 
         assert result == 20
 
-        mock_file.assert_called_once_with('../reports\\report.txt', 'a', encoding='utf-8')
+        mock_file.assert_called_once_with("../reports\\report.txt", "a", encoding="utf-8")
         mock_file().write.assert_called_once_with("Результат функции multiply: 20\n")
 
 
@@ -83,12 +84,12 @@ def test_function_error_report_default_path():
 
         assert result is None
 
-        mock_file.assert_called_once_with('../reports\\report.txt', 'a', encoding='utf-8')
+        mock_file.assert_called_once_with("../reports\\report.txt", "a", encoding="utf-8")
         mock_file().write.assert_called_once_with("divide error: ZeroDivisionError. Inputs: (1, 0), {}\n")
 
 
-@patch('os.makedirs')
-@patch('os.path.exists')
+@patch("os.makedirs")
+@patch("os.path.exists")
 def test_without_filename(mock_exists, mock_makedirs):
     mock_exists.return_value = False
 

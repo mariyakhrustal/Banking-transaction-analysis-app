@@ -3,7 +3,6 @@ import os
 from functools import wraps
 from typing import Any, Callable, Optional
 
-
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs")
 if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)  # pragma: no cover
@@ -18,6 +17,7 @@ logger.setLevel(logging.DEBUG)
 
 def report(filename: Optional[str] = None) -> Callable:
     """Декоратор для записи отчета в файл"""
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -54,5 +54,7 @@ def report(filename: Optional[str] = None) -> Callable:
                     with open(os.path.join(report_dir, "report.txt"), "a", encoding="utf-8") as file:
                         file.write(report_message)
                 logger.info("Завершение работы декоратора")
+
         return wrapper
+
     return decorator

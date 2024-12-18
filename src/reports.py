@@ -36,11 +36,11 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     )
     three_month_ago = input_date - timedelta(days=90)
     filtered_df = transactions[
-        (transactions["Категория"] == category) &
-        (transactions["Дата операции"] >= three_month_ago) &
-        (transactions["Дата операции"] <= input_date) &
-        (transactions["Сумма платежа"] < 0)
-        ]
+        (transactions["Категория"] == category)
+        & (transactions["Дата операции"] >= three_month_ago)
+        & (transactions["Дата операции"] <= input_date)
+        & (transactions["Сумма платежа"] < 0)
+    ]
     logger.info("Транзакции переводятся в список словарей для дальнейшей работы")
     transacts_dict = filtered_df.to_dict(orient="records")
     final_list = []
