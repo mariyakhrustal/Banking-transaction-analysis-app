@@ -40,7 +40,7 @@ def report(filename: Optional[str] = None) -> Callable:
                     with open(filename, "w", encoding="utf-8") as file:
                         file.write(report_message)
                 else:
-                    with open(os.path.join(report_dir, "report.txt"), "w", encoding="utf-8") as file:
+                    with open(os.path.join(report_dir, "report.log"), "w", encoding="utf-8") as file:
                         file.write(report_message)
                 logger.info("Запись в файл результата успешной работы функции")
                 return result
@@ -51,7 +51,7 @@ def report(filename: Optional[str] = None) -> Callable:
                     with open(filename, "w", encoding="utf-8") as file:
                         file.write(report_message)
                 else:
-                    with open(os.path.join(report_dir, "report.txt"), "w", encoding="utf-8") as file:
+                    with open(os.path.join(report_dir, "report.log"), "w", encoding="utf-8") as file:
                         file.write(report_message)
                 logger.info("Завершение работы декоратора")
 

@@ -54,7 +54,7 @@ def test_report_with_no_filename():
 
         assert result == 42
 
-        mock_file.assert_called_once_with("../reports\\report.txt", "w", encoding="utf-8")
+        mock_file.assert_called_once_with("../reports\\report.log", "w", encoding="utf-8")
         mock_file().write.assert_called_once_with("Результат функции multiply: 42\n")
 
 
@@ -74,7 +74,7 @@ def test_default_report_file():
 
         assert result == 20
 
-        mock_file.assert_called_once_with("../reports\\report.txt", "w", encoding="utf-8")
+        mock_file.assert_called_once_with("../reports\\report.log", "w", encoding="utf-8")
         mock_file().write.assert_called_once_with("Результат функции multiply: 20\n")
 
 
@@ -84,7 +84,7 @@ def test_function_error_report_default_path():
 
         assert result is None
 
-        mock_file.assert_called_once_with("../reports\\report.txt", "w", encoding="utf-8")
+        mock_file.assert_called_once_with("../reports\\report.log", "w", encoding="utf-8")
         mock_file().write.assert_called_once_with("divide error: ZeroDivisionError. Inputs: (1, 0), {}\n")
 
 

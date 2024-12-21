@@ -21,7 +21,7 @@ logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
 
 
-@report("../reports/report.txt")
+@report("../reports/report.log")
 def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None) -> str:
     """Функция возвращает траты по заданной категории за последние три месяца (от переданной даты)"""
     logger.info("Начало работы функции траты по категориям")

@@ -27,20 +27,18 @@ logger.setLevel(logging.DEBUG)
 
 def read_greeting() -> str:
     """Функция для генерации приветствия пользователя"""
-    current_time = datetime.now()
     logger.info("Функция начала свою работу.")
+    current_time = datetime.now()
     if 6 <= current_time.hour < 12:
-        logger.info("Функция успешно завершила свою работу.")
-        return "Доброе утро"
+        greeting = "Доброе утро"
     elif 12 <= current_time.hour < 18:
-        logger.info("Функция успешно завершила свою работу.")
-        return "Добрый день"
+        greeting = "Добрый день"
     elif 18 <= current_time.hour < 24:
-        logger.info("Функция успешно завершила свою работу.")
-        return "Добрый вечер"
+        greeting = "Добрый вечер"
     else:
-        logger.info("Функция успешно завершила свою работу.")
-        return "Доброй ночи"
+        greeting = "Доброй ночи"
+    logger.info("Функция успешно завершила свою работу.")
+    return greeting
 
 
 def read_file_xlsx(file_path: str) -> Any:
